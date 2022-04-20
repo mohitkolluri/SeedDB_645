@@ -31,7 +31,8 @@ DATABASE = 'seeddb'
 USER = 'team_645_seeddb'
 
 SCHEMA_NAME = 'census_income'
-TABLE_NAME = 'adult'
+TABLE_NAME_MARRIED = 'adult_married'
+TABLE_NAME_UNMARRIED = 'adult_unmarried'
 COLUMNS_DICT = {'age':'INTEGER', 
 'workclass': 'VARCHAR', 'fnlwgt': 'INTEGER',
 'education': 'VARCHAR', 'education_num': 'INTEGER', 'marital_status': 'VARCHAR',
@@ -39,6 +40,7 @@ COLUMNS_DICT = {'age':'INTEGER',
 'race': 'VARCHAR', 'sex': 'VARCHAR', 
 'capital_gain': 'INTEGER', 'capital_loss': 'INTEGER',
 'hours_per_week': 'INTEGER', 'native_country': 'VARCHAR', 'salary_range': 'VARCHAR'}
+PHASES = 10
 
 def read_file(filename='adult.data'):
     data_type = list(COLUMNS_DICT.values())
@@ -72,18 +74,20 @@ def connect_database():
     host=HOST,
     port=PORT,
     database=DATABASE,
-    user=USER)
+    user=USER,
+    password="1234")
 
     return conn
 
 def execute_query(query):
     connection = connect_database()
     cur = connection.cursor()
-    print(query)
-    cur.execute(query)
+    #print(query)
     try:
+        cur.execute(query)
         result = cur.fetchall()
-    except:
+    except Exception as e:
+        print(e)
         result = None
     cur.close()
     connection.commit()
@@ -99,23 +103,58 @@ def create_table(table_name, schema_name, columns_dict):
     columns = []
     for column, data_type in columns_dict.items():
         columns.append(f'{column} {data_type}')
-
     columns = ','.join(columns)
-    query = f'CREATE TABLE IF NOT EXISTS {schema_name}.{table_name} ({columns});'
-    return execute_query(query)
+    for i in range(PHASES):
+        query = f'CREATE TABLE IF NOT EXISTS {schema_name}.{table_name}_{i} ({columns});'
+        try:
+            execute_query(query)
+            result = "Success"
+        except Exception as e:
+            print(e)
+            result = None
+    return result
 
     print(query)
 
-def insert_to_table(table_name, schema_name, rows_list):
+def split_data(curr_list):
+    married=[]
+    unmarried = []
+    married_matches=["Married","Seperated"]
+    for row in curr_list:
+        if any(x in row for x in married_matches):
+            married.append(row)
+        else:
+            unmarried.append(row)
+    return married, unmarried
 
-    query = f"insert into {schema_name}.{table_name} values {','.join(rows_list)}"
-    return execute_query(query)
+def insert_to_table(schema_name, rows_list):
+    number_of_records= len(rows_list)
+    split, r = divmod(number_of_records,PHASES)
+    for i in range(PHASES):
+        if i==PHASES-1:
+            curr_list=rows_list[i*split:]
+        else:
+            curr_list=rows_list[i*split:i*split+split]
+        married,unmarried = split_data(curr_list)
+        query_married = f"insert into {schema_name}.{TABLE_NAME_MARRIED}_{i} values {','.join(married)}"
+        query_unmarried = f"insert into {schema_name}.{TABLE_NAME_UNMARRIED}_{i} values {','.join(unmarried)}"
+        try:
+            execute_query(query_married)
+            execute_query(query_unmarried)
+            result = "Success"
+        except Exception as e:
+            print(e)
+            result = None
+    return result
+
 
 def setup_project():
     print(create_schema(SCHEMA_NAME))
-    print(create_table(TABLE_NAME, SCHEMA_NAME, COLUMNS_DICT))
+    print(create_table(TABLE_NAME_MARRIED, SCHEMA_NAME, COLUMNS_DICT))
+    print(create_table(TABLE_NAME_UNMARRIED, SCHEMA_NAME, COLUMNS_DICT))
     rows_list = read_file()
-    print(insert_to_table(TABLE_NAME, SCHEMA_NAME, rows_list))
+    print(len(rows_list))
+    print(insert_to_table(SCHEMA_NAME, rows_list))
 
 if __name__ == "__main__":
     setup_project()
