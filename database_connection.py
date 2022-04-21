@@ -113,7 +113,20 @@ def create_table(table_name, schema_name, columns_dict):
             result = None
     return result
 
-    print(query)
+def create_main_table(table_name, schema_name, columns_dict):
+    columns = []
+    for column, data_type in columns_dict.items():
+        columns.append(f'{column} {data_type}')
+    columns = ','.join(columns)
+
+    query = f'CREATE TABLE IF NOT EXISTS {schema_name}.{table_name} ({columns});'
+    try:
+        execute_query(query)
+        result = "Success"
+    except Exception as e:
+        print(e)
+        result = None
+    return result
 
 def split_data(curr_list):
     married=[]
@@ -137,6 +150,7 @@ def insert_to_table(schema_name, rows_list):
         married,unmarried = split_data(curr_list)
         query_married = f"insert into {schema_name}.{constants.TABLE_NAME_MARRIED}_{i} values {','.join(married)}"
         query_unmarried = f"insert into {schema_name}.{constants.TABLE_NAME_UNMARRIED}_{i} values {','.join(unmarried)}"
+        
         try:
             execute_query(query_married)
             execute_query(query_unmarried)
@@ -144,6 +158,10 @@ def insert_to_table(schema_name, rows_list):
         except Exception as e:
             print(e)
             result = None
+
+    #print(f"insert into {schema_name}.{constants.TABLE_NAME}")
+    query_main_table = f"insert into {schema_name}.{constants.TABLE_NAME} values {','.join(rows_list)}"
+    execute_query(query_main_table)
     return result
 
 
@@ -151,6 +169,7 @@ def setup_project():
     print(create_schema(constants.SCHEMA_NAME))
     print(create_table(constants.TABLE_NAME_MARRIED, constants.SCHEMA_NAME, COLUMNS_DICT))
     print(create_table(constants.TABLE_NAME_UNMARRIED, constants.SCHEMA_NAME, COLUMNS_DICT))
+    print(create_main_table(constants.TABLE_NAME, constants.SCHEMA_NAME, COLUMNS_DICT))
     rows_list = read_file()
     print(len(rows_list))
     print(insert_to_table(constants.SCHEMA_NAME, rows_list))

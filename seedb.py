@@ -16,6 +16,10 @@ def clear_db():
         database_connection.execute_query(query_1)
         database_connection.execute_query(query_2)
 
+    query = f"drop table {constants.SCHEMA_NAME}.{constants.TABLE_NAME}"
+    database_connection.execute_query(query)
+
+
 def test():
     total = 0
     print("test")
@@ -42,12 +46,12 @@ def generate_fams():
 
 if __name__ == "__main__":
     
-    #clear_db()
-    #database_connection.setup_project()
+    clear_db()
+    database_connection.setup_project()
     #test()
     
     #fam_set = {('avg','sex','capital_gain'),('avg','sex','age')}
-    print(f"Length of fam_set = {len(fam_set)}")
+    #print(f"Length of fam_set = {len(fam_set)}")
 
     #sharing_optimize(fam_set, 0)
 

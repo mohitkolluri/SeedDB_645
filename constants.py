@@ -4,5 +4,6 @@ aggregates= ["workclass","education","education_num","marital_status","occupatio
 "native_country","salary_range"]
 TABLE_NAME_MARRIED = 'adult_married'
 TABLE_NAME_UNMARRIED = 'adult_unmarried'
+TABLE_NAME = 'adult'
 SCHEMA_NAME = 'census_income'
 PHASES = 10
