@@ -1,4 +1,5 @@
 import psycopg2
+import constants
 '''
 INSTRUCTIONS FOR SETTING UP DB: 
 Download postgres: 
@@ -7,7 +8,7 @@ Macbook: https://wiki.postgresql.org/wiki/Homebrew
 ---------------------------------------
 Enter postgres CLI using 'psql postgres'
 
---> CREATE DATABASE SeedDB
+--> CREATE DATABASE seeddb
 --> create user team_645_seeddb
 --> ALTER USER team_645_seeddb WITH SUPERUSER;
 ------------------------------------------
@@ -30,17 +31,15 @@ PORT = '5432'
 DATABASE = 'seeddb'
 USER = 'team_645_seeddb'
 
-SCHEMA_NAME = 'census_income'
-TABLE_NAME_MARRIED = 'adult_married'
-TABLE_NAME_UNMARRIED = 'adult_unmarried'
+
 COLUMNS_DICT = {'age':'INTEGER', 
 'workclass': 'VARCHAR', 'fnlwgt': 'INTEGER',
 'education': 'VARCHAR', 'education_num': 'INTEGER', 'marital_status': 'VARCHAR',
-'occupation':'VARCHAR', 'relationshiop': 'VARCHAR',
+'occupation':'VARCHAR', 'relationship': 'VARCHAR',
 'race': 'VARCHAR', 'sex': 'VARCHAR', 
 'capital_gain': 'INTEGER', 'capital_loss': 'INTEGER',
 'hours_per_week': 'INTEGER', 'native_country': 'VARCHAR', 'salary_range': 'VARCHAR'}
-PHASES = 10
+
 
 def read_file(filename='adult.data'):
     data_type = list(COLUMNS_DICT.values())
@@ -104,7 +103,7 @@ def create_table(table_name, schema_name, columns_dict):
     for column, data_type in columns_dict.items():
         columns.append(f'{column} {data_type}')
     columns = ','.join(columns)
-    for i in range(PHASES):
+    for i in range(constants.PHASES):
         query = f'CREATE TABLE IF NOT EXISTS {schema_name}.{table_name}_{i} ({columns});'
         try:
             execute_query(query)
@@ -129,15 +128,15 @@ def split_data(curr_list):
 
 def insert_to_table(schema_name, rows_list):
     number_of_records= len(rows_list)
-    split, r = divmod(number_of_records,PHASES)
-    for i in range(PHASES):
-        if i==PHASES-1:
+    split, r = divmod(number_of_records,constants.PHASES)
+    for i in range(constants.PHASES):
+        if i==constants.PHASES-1:
             curr_list=rows_list[i*split:]
         else:
             curr_list=rows_list[i*split:i*split+split]
         married,unmarried = split_data(curr_list)
-        query_married = f"insert into {schema_name}.{TABLE_NAME_MARRIED}_{i} values {','.join(married)}"
-        query_unmarried = f"insert into {schema_name}.{TABLE_NAME_UNMARRIED}_{i} values {','.join(unmarried)}"
+        query_married = f"insert into {schema_name}.{constants.TABLE_NAME_MARRIED}_{i} values {','.join(married)}"
+        query_unmarried = f"insert into {schema_name}.{constants.TABLE_NAME_UNMARRIED}_{i} values {','.join(unmarried)}"
         try:
             execute_query(query_married)
             execute_query(query_unmarried)
@@ -149,12 +148,12 @@ def insert_to_table(schema_name, rows_list):
 
 
 def setup_project():
-    print(create_schema(SCHEMA_NAME))
-    print(create_table(TABLE_NAME_MARRIED, SCHEMA_NAME, COLUMNS_DICT))
-    print(create_table(TABLE_NAME_UNMARRIED, SCHEMA_NAME, COLUMNS_DICT))
+    print(create_schema(constants.SCHEMA_NAME))
+    print(create_table(constants.TABLE_NAME_MARRIED, constants.SCHEMA_NAME, COLUMNS_DICT))
+    print(create_table(constants.TABLE_NAME_UNMARRIED, constants.SCHEMA_NAME, COLUMNS_DICT))
     rows_list = read_file()
     print(len(rows_list))
-    print(insert_to_table(SCHEMA_NAME, rows_list))
+    print(insert_to_table(constants.SCHEMA_NAME, rows_list))
 
 if __name__ == "__main__":
     setup_project()
