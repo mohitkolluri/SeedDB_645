@@ -19,7 +19,7 @@ def sharing_optimize(queries,phase):
 		#f,a,m = fam
 		query_married = f'select {a}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_MARRIED}_{phase} GROUP BY {a};'
 		query_unmarried = f'select {a}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_UNMARRIED}_{phase} GROUP BY {a};'
-		print(query_married)
+		#print(query_married)
 		
 
 		
@@ -45,7 +45,6 @@ def sharing_optimize(queries,phase):
 							result_dict_unmarried[fam] = {}
 						result_dict_unmarried[fam][agg_val] = fm_val
 
-	#print(result_dict_married[('avg', 'sex', 'capital_gain')])
 	return result_dict_married,result_dict_unmarried
 
 

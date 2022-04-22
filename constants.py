@@ -7,3 +7,6 @@ TABLE_NAME_UNMARRIED = 'adult_unmarried'
 TABLE_NAME = 'adult'
 SCHEMA_NAME = 'census_income'
 PHASES = 10
+TOPK = 5
+DELTA =0.05
+EPSILON = 1e-5
