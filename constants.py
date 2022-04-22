@@ -8,5 +8,5 @@ TABLE_NAME = 'adult'
 SCHEMA_NAME = 'census_income'
 PHASES = 10
 TOPK = 5
-DELTA =0.05
-EPSILON = 1e-5
+DELTA =1e-5
+EPSILON = 1e-8
