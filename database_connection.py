@@ -131,9 +131,9 @@ def create_main_table(table_name, schema_name, columns_dict):
 def split_data(curr_list):
     married=[]
     unmarried = []
-    married_matches=["Married","Seperated"]
+    married_matches=['Married-civ-spouse', 'Widowed', 'Married-spouse-absent', 'Married-AF-spouse', 'Separated']
     for row in curr_list:
-        if any(x in row for x in married_matches):
+        if any(x.lower() in row.lower() for x in married_matches):
             married.append(row)
         else:
             unmarried.append(row)

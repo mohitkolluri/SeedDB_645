@@ -34,7 +34,7 @@ def pruning_optimization(candidate_queries):
     new = 0
     utility = collections.defaultdict(float)
     for phase in range(constants.PHASES):
-        print(len(candidate_queries))
+        #print(len(candidate_queries))
         married_dict, unmarried_dict = sharing_optimize(candidate_queries, phase)
         for (f, a, m) in candidate_queries:
             try:
@@ -61,5 +61,5 @@ def pruning_optimization(candidate_queries):
                     candidate_queries.remove((f,a,m))
                 if (f,a,m) in utility.keys():
                     utility.pop((f,a,m))
-    print(issues)
+    #print(issues)
     return top_k
