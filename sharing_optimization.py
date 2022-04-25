@@ -5,20 +5,20 @@ def sharing_optimize(queries,phase):
 	aggregate_map = {}
 	result_dict_married = {}
 	result_dict_unmarried = {}
-	for (f,a,m) in queries:
-		if a in aggregate_map:
-			aggregate_map[a][0] += f',{f}({m})'
-			aggregate_map[a][1].append((f,a,m))
+	for (f,a1,a2,m) in queries:
+		if (a1,a2) in aggregate_map:
+			aggregate_map[(a1,a2)][0] += f',{f}({m})'
+			aggregate_map[(a1,a2)][1].append((f,a1,a2,m))
 		else:
-			aggregate_map[a] = ['', []]
-			aggregate_map[a][0] = f',{f}({m})'
-			aggregate_map[a][1].append((f,a,m))
+			aggregate_map[(a1,a2)] = ['', []]
+			aggregate_map[(a1,a2)][0] = f',{f}({m})'
+			aggregate_map[(a1,a2)][1].append((f,a1,a2,m))
 	queries_to_execute = {"married":[],"unmarried":[]}
-	for a,row in aggregate_map.items():
+	for (a1,a2),row in aggregate_map.items():
 		q, fams = row[0], row[1]
 		#f,a,m = fam
-		query_married = f'select {a}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_MARRIED}_{phase} GROUP BY {a};'
-		query_unmarried = f'select {a}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_UNMARRIED}_{phase} GROUP BY {a};'
+		query_married = f'select {a1},{a2}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_MARRIED}_{phase} GROUP BY {a1},{a2};'
+		query_unmarried = f'select {a1},{a2}{q} from {constants.SCHEMA_NAME}.{constants.TABLE_NAME_UNMARRIED}_{phase} GROUP BY {a1},{a2};'
 		#print(query_married)
 		
 
@@ -29,11 +29,11 @@ def sharing_optimize(queries,phase):
 			# if a == 'sex':
 			# 	print(result)
 			for row in result:
-				agg_val = row[0]
+				agg_val = (row[0],row[1])
 				for i in range(len(fams)):
-					f,a,m = fams[i]
+					f,a1,a2,m = fams[i]
 					fam = fams[i]
-					fm_val = row[i+1]
+					fm_val = row[i+2]
 
 					
 					if status == "married":

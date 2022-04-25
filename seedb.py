@@ -40,8 +40,13 @@ def generate_fams():
 
     for f in constants.functions:
         for m in constants.measures:
-            for a in constants.aggregates:
-                fam_set.add((f,a,m))
+            i =0
+            while i < len(constants.aggregates):
+                j = i+1
+                while j < len(constants.aggregates):
+                    fam_set.add((f,constants.aggregates[i],constants.aggregates[j],m))
+                    j += 1
+                i += 1
 
     return fam_set
 
@@ -52,11 +57,11 @@ if __name__ == "__main__":
     #test()
 
     #fam_set = {('min', 'education', 'capital_gain'), ('min', 'education', 'capital_loss'), ('min', 'education_num', 'capital_gain'), ('min', 'education_num', 'capital_loss'),('min', 'marital_status', 'capital_gain'), ('min', 'marital_status', 'capital_loss')}
-    #fam_set = generate_fams()
+    fam_set = generate_fams()
     #print(f"Length of fam_set = {len(fam_set)}")
 
-    #top_k_interesting_visualizations = pruning_optimization(fam_set)
-    #print(top_k_interesting_visualizations.keys())
+    top_k_interesting_visualizations = pruning_optimization(fam_set)
+    print(top_k_interesting_visualizations.keys())
 
 
 

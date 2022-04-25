@@ -34,13 +34,13 @@ def pruning_optimization(candidate_queries):
     new = 0
     utility = collections.defaultdict(float)
     for phase in range(constants.PHASES):
-        #print(len(candidate_queries))
+        print(len(candidate_queries))
         married_dict, unmarried_dict = sharing_optimize(candidate_queries, phase)
-        for (f, a, m) in candidate_queries:
+        for (f, a1,a2, m) in candidate_queries:
             try:
-                utility[f,a,m]+=kl_divergence(married_dict[((f, a, m))], unmarried_dict[((f, a, m))])
+                utility[f,a1,a2,m]+=kl_divergence(married_dict[((f, a1,a2, m))], unmarried_dict[((f, a1,a2, m))])
             except Exception as e:
-                issues.add((f,a,m))
+                issues.add((f,a1,a2,m))
                 print(e)
         m = (phase + 1)
         #print(utility)
@@ -53,13 +53,13 @@ def pruning_optimization(candidate_queries):
             e = math.sqrt((a * (b + c) / 2 * m))
             min_util = min(top_k.values())/(phase+1)-e
             prunelist = set()
-            for (f, a, m) in utility.keys():
-                if utility[(f, a, m)]/(phase+1) + e < min_util:
-                    prunelist.add((f,a,m))
-            for (f, a, m) in prunelist:
-                if (f,a,m) in candidate_queries:
-                    candidate_queries.remove((f,a,m))
-                if (f,a,m) in utility.keys():
-                    utility.pop((f,a,m))
+            for (f, a1,a2, m) in utility.keys():
+                if utility[(f, a1,a2, m)]/(phase+1) + e < min_util:
+                    prunelist.add((f,a1,a2,m))
+            for (f, a1,a2, m) in prunelist:
+                if (f,a1,a2,m) in candidate_queries:
+                    candidate_queries.remove((f,a1,a2,m))
+                if (f,a1,a2,m) in utility.keys():
+                    utility.pop((f,a1,a2,m))
     #print(issues)
     return top_k
