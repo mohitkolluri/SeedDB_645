@@ -5,9 +5,9 @@ import math
 import collections
 import warnings
 warnings.filterwarnings("error")
-
+from scipy import stats
 def kl_divergence(target, reference):
-    keys = set(target.keys()).union(set(reference.keys()))
+    keys = set(target.keys()).intersection(set(reference.keys()))
     target_list = []
     reference_list = []
     for key in keys:
@@ -15,17 +15,19 @@ def kl_divergence(target, reference):
         reference_list.append(float(reference.get(key,0.0)))
     np_target = np.array(target_list)
     np_reference = np.array(reference_list)
-    #np_target[np_target==0] +=constants.EPSILON
-    #np_reference[np_reference==0] +=constants.EPSILON
-    target_sum = np.sum(np_target)
-    ref_sum = np.sum(np_reference)
-    utility = 0
-    if target_sum!=0 and ref_sum!=0:
+    np_target[np_target==0] +=constants.EPSILON
+    np_reference[np_reference==0] +=constants.EPSILON
+    #target_sum = np.sum(np_target)
+    #ref_sum = np.sum(np_reference)
+    np_target_prob_distribution = np_target / np.sum(np_target)
+    np_reference_prob_distribution = np_reference / np.sum(np_reference)
+    utility = stats.entropy(np_target_prob_distribution,np_reference_prob_distribution)
+    '''if target_sum!=0 and ref_sum!=0:
         np_target_prob_distribution = np_target / np.sum(np_target)
         np_reference_prob_distribution = np_reference / np.sum(np_reference)
         for i in range(len(np_target)):
             if np_target_prob_distribution[i]!=0 and np_reference_prob_distribution[i]!=0:
-                utility+= math.log(np_target_prob_distribution[i], np_reference_prob_distribution[i])
+                utility+= math.log(np_target_prob_distribution[i], np_reference_prob_distribution[i])'''
     return utility
 
 
@@ -34,11 +36,11 @@ def pruning_optimization(candidate_queries):
     new = 0
     utility = collections.defaultdict(float)
     for phase in range(constants.PHASES):
-        #print(len(candidate_queries))
+        print(len(candidate_queries))
         married_dict, unmarried_dict = sharing_optimize(candidate_queries, phase)
         for (f, a, m) in candidate_queries:
             try:
-                utility[f,a,m]+=kl_divergence(married_dict[((f, a, m))], unmarried_dict[((f, a, m))])
+                utility[f,a,m]+=kl_divergence(unmarried_dict[((f, a, m))], married_dict[((f, a, m))])
             except Exception as e:
                 issues.add((f,a,m))
                 print(e)

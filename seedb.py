@@ -47,16 +47,16 @@ def generate_fams():
 
 if __name__ == "__main__":
 
-    clear_db()
-    database_connection.setup_project()
+    #clear_db()
+    #database_connection.setup_project()
     #test()
 
     #fam_set = {('min', 'education', 'capital_gain'), ('min', 'education', 'capital_loss'), ('min', 'education_num', 'capital_gain'), ('min', 'education_num', 'capital_loss'),('min', 'marital_status', 'capital_gain'), ('min', 'marital_status', 'capital_loss')}
-    #fam_set = generate_fams()
-    #print(f"Length of fam_set = {len(fam_set)}")
+    fam_set = generate_fams()
+    print(f"Length of fam_set = {len(fam_set)}")
 
-    #top_k_interesting_visualizations = pruning_optimization(fam_set)
-    #print(top_k_interesting_visualizations.keys())
-
+    top_k_interesting_visualizations = pruning_optimization(fam_set)
+    for k,v in top_k_interesting_visualizations.items():
+        print(k,v/10)
 
 
