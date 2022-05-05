@@ -52,8 +52,8 @@ def generate_fams():
 
 if __name__ == "__main__":
 
-    clear_db()
-    database_connection.setup_project()
+    #clear_db()
+    #database_connection.setup_project()
     #test()
 
     #fam_set = {('min', 'education', 'capital_gain'), ('min', 'education', 'capital_loss'), ('min', 'education_num', 'capital_gain'), ('min', 'education_num', 'capital_loss'),('min', 'marital_status', 'capital_gain'), ('min', 'marital_status', 'capital_loss')}
