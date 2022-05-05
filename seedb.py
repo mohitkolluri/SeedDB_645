@@ -47,11 +47,8 @@ def generate_fams():
 
 if __name__ == "__main__":
 
-    #clear_db()
-    #database_connection.setup_project()
-    #test()
-
-    #fam_set = {('min', 'education', 'capital_gain'), ('min', 'education', 'capital_loss'), ('min', 'education_num', 'capital_gain'), ('min', 'education_num', 'capital_loss'),('min', 'marital_status', 'capital_gain'), ('min', 'marital_status', 'capital_loss')}
+    clear_db()
+    database_connection.setup_project()
     fam_set = generate_fams()
     print(f"Length of fam_set = {len(fam_set)}")
 
