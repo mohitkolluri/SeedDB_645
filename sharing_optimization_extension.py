@@ -1,6 +1,10 @@
 import constants
 from database_connection import execute_query
-
+'''
+Developed by:
+Priyanshi Somani
+psomani@umass.edu
+'''
 def sharing_optimize(queries,phase):
 	aggregate_map = {}
 	result_dict_married = {}
