@@ -2,7 +2,11 @@ import database_connection
 from sharing_optimization import sharing_optimize
 import constants
 from pruning_optimization import pruning_optimization
-
+'''
+Developed by:
+Mohit Kolluri
+mkolluri@umass.edu
+'''
 
 
 functions = ["sum","count", "max", "avg", "min"]
