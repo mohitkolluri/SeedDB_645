@@ -5,7 +5,11 @@ import math
 import collections
 import warnings
 warnings.filterwarnings("error")
-
+'''
+Developed by:
+Ashwini Yellu
+ayellu@umass.edu
+'''
 def kl_divergence(target, reference):
     keys = set(target.keys()).union(set(reference.keys()))
     target_list = []
