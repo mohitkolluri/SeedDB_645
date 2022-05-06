@@ -3,6 +3,11 @@ from sharing_optimization_extension import sharing_optimize
 import constants
 from pruning_optimization_extension import pruning_optimization
 
+'''
+Developed by:
+Priyanshi Somani
+psomani@umass.edu
+'''
 
 
 functions = ["sum","count", "max", "avg", "min"]
