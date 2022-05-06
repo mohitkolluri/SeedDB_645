@@ -1,6 +1,11 @@
 import psycopg2
 import constants
 '''
+Developed by:
+Mohit Kolluri
+mkolluri@umass.edu
+'''
+'''
 INSTRUCTIONS FOR SETTING UP DB: 
 Download postgres: 
 Windows: https://www.postgresql.org/download/windows/
