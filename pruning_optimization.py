@@ -6,6 +6,13 @@ import collections
 import warnings
 warnings.filterwarnings("error")
 from scipy import stats
+'''
+'''
+Developed by:
+Ashwini Yellu
+ayellu@umass.edu
+'''
+'''
 def kl_divergence(target, reference):
     keys = set(target.keys()).intersection(set(reference.keys()))
     target_list = []
